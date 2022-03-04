@@ -30,7 +30,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Roll",
+                    "name": "Dive",
                     "type": "Button",
                     "id": "49ffe21c-2eb3-45da-ae3d-0b1d2bc3e230",
                     "expectedControlType": "Button",
@@ -41,14 +41,6 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "2065fd96-a247-48f7-bdf3-668ce930354b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Falling",
-                    "type": "Button",
-                    "id": "06ed38a8-21eb-44d7-9b86-525b1a89341c",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -95,7 +87,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Roll",
+                    "action": "Dive",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -107,17 +99,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6fdc7f08-0211-44fe-8ef5-eee1504a3dd1",
-                    "path": "<DualShockGamepad>/buttonEast",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Falling",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

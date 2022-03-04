@@ -19,6 +19,9 @@ public class Movement : MonoBehaviour
     public float jumpSpeed = 6.0f;
     private bool DoubleJump = false;
     private float jumpTimer = 6;
+    private bool onGround = true;
+    private const int maxJump = 2;
+    private int currentJump = 0;
 
     Vector3 move;
 
@@ -72,6 +75,18 @@ public class Movement : MonoBehaviour
             BoostSpeed = true;
             Destroy(other.gameObject);
         }
+
+        if (other.tag == "DoubleJump")
+        {
+            DoubleJump = true;
+            Destroy(other.gameObject);
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        onGround = true;
+        currentJump = 0;
     }
 
 
@@ -82,11 +97,12 @@ public class Movement : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(moveX, moveY, moveZ).normalized;
         controller.SimpleMove(Vector3.forward * 0);
-
-        animator.SetFloat("IsRunning", Mathf.Abs(direction.x));
+        animator.SetBool("IsIdle", true);
 
         if (Mathf.Abs(direction.x) >= 0.1f)
         {
+            animator.SetBool("IsRun", true);
+            animator.SetBool("IsJumping", false);
             targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angle, 0f);
@@ -94,14 +110,32 @@ public class Movement : MonoBehaviour
             Debug.Log("Should be moving");
         }
 
-        
-        if (Mathf.Abs(direction.y) >= 0.1f)
+        else
         {
+            //animator.SetBool("IsIdle", true);
+        }
+
+        if ((Mathf.Abs(direction.y) >= 0.1f))
+        {
+            animator.SetBool("IsJumping", true);
             moveY = moveY + (Physics.gravity.y * 2.0f * Time.deltaTime);
+            onGround = false;
+
+        }
+        else
+        {
+            onGround = true;
+            animator.SetBool("IsIdle", true);
         }
 
         controller.Move(direction.normalized * speed * Time.deltaTime);    
 
+        if (controller.isGrounded)
+        {
+            print("CharacterController is grounded");
+        }
+
+        //Speed boost
         if (BoostSpeed)
         {
             speed = 20;
@@ -115,11 +149,13 @@ public class Movement : MonoBehaviour
 
         }
 
-        if (Input.GetButtonDown("Fall"))
+        //Dive
+        if (Input.GetButtonDown("Dive"))
         {
-            animator.SetTrigger("IsFalling");
+            animator.SetTrigger("IsDiving");
         }
 
+        //Double Jump
         if (DoubleJump)
         {
             jumpTimer -= Time.deltaTime;
@@ -127,6 +163,7 @@ public class Movement : MonoBehaviour
             {
                 DoubleJump = false;
                 boostTimer = 3;
+                moveY = moveY + (Physics.gravity.y * 4.0f * Time.deltaTime);
             }
         }
 
@@ -142,6 +179,7 @@ public class Movement : MonoBehaviour
 
     }
 
+    //Attack
     void Punch(InputAction.CallbackContext context)
     {
         animator.SetTrigger("IsPunching");
